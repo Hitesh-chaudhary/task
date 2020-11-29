@@ -1,0 +1,48 @@
+<% if @user.present? %>
+	
+	<h2>User profile</h2>
+	Name: <%= @user.name %><br />
+	WebSite <%= @user.website %><br />
+	Short website <%= @user.short_website.present? ? @user.short_website : "-"  %><br />
+	Data <%= @user.site_data.present? ? @user.site_data : "-" %><br />
+
+	<input type="hidden" name="current_user" id="current_user_id" value="<%= @user.id%>">
+	<br />
+	<br />
+	<br />
+	Already friend with:- <br />
+	<% @user.friendships.each do |friendship| %>
+		<%= friendship.friend.name %>
+	<% end %>
+
+	<% @user.inverse_friends.each do |user| %>
+		<%= user.name %>
+	<% end %>
+	<br />
+	<br />
+	<br />
+	Add friends<br />
+	
+	<% @users.each do |user| %>
+		<%= user.name %>
+		<%= link_to "Add Friend", '#' , id: "create-friend", data: user.id%>
+	<% end %>
+
+<% else %>
+	<tr>
+		<td colspan="3">No data present for particular user</td>
+	</tr>
+<% end %>
+
+<script type="text/javascript">
+	$('#create-friend').click(function(){
+		$.ajax({
+	    type: 'POST',
+	    url: '<%= friendships_path %>',
+	    data: { user_id: $("#current_user_id").val(), friend_id: $(this).attr("data")},
+	    dataType: 'script',
+	    success: function(response) {
+	    }
+  	});
+	});
+</script>

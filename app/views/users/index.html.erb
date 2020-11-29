@@ -1,0 +1,21 @@
+<h2>list of member</h2>
+<%= link_to "Add new member", new_user_path %> 
+<table style="border: 1px black solid;">
+	<thead>
+		<th>Name</th>
+		<th>Short url</th>
+		<th>Number of friends</th>
+	</thead>
+	<tbody>
+		<% if @users.present? %>
+			<% @users.each do |user| %>
+				<tr>
+					<td><%= link_to "#{user.name}", user_path(user) %></td>
+					<td><%= user.short_website %></td>
+					<td><%= count_friend(user) %></td>
+				</tr>
+			<% end %>
+		<% else %>
+		<% end %>
+	</tbody>	
+</table>

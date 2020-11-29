@@ -1,0 +1,10 @@
+---
+:concurrency: 4
+staging:
+  :concurrency: 4
+production:
+  :concurrency: 12
+:queues:
+  - [high, 7]
+  - [mailer, 5]
+  - default

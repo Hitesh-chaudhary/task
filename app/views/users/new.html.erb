@@ -1,0 +1,7 @@
+<%= form_with model: @user do |f| %>
+	<%= f.label :name %>
+	<%= f.text_field :name, required: true %><br/>
+	<%= f.label :website %>
+	<%= f.url_field :website, required: true %> <br />
+	<%= f.submit "Create Member"	 %>
+<% end %>
