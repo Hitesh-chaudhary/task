@@ -12,6 +12,7 @@ class UsersController < ApplicationController
 	def create
 		@user = User.create(user_params)
 		if @user.save
+			WebsitesWorker.perform_async(@user.id)
 			flash[:alert] = 'Member created successfully'
 			redirect_to @user
 		else
