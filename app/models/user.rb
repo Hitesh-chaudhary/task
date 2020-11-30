@@ -7,10 +7,52 @@ class User < ApplicationRecord
 
 	validates :name, presence: true, uniqueness: true
 	validates :website, presence: true, uniqueness: true
-	# after_create :create_short_url
+	after_create :create_short_url
 
-	# def create_short_url
-	# 	url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AAAASuCXUqw:APA91bGU4jI7YG_F6hACW1u4ybXUrXgOI22hujB1ddLaYSN1UqCdHdoV-xN8JcxkOKGdNwsJbsyUK0e3Emv7qpIdA2ZPhk1XL4lhGMNX3ZSju_b2kO0ZlAJI-YvSOJVHqsKo3P3tb_39"	
-		
-	# end	
+	def create_short_url
+		begin
+			firebase_object = FirebaseDynamicLink.configure do |config|
+	      # the adapter should be supported by Faraday
+	      # more info look at https://github.com/lostisland/faraday/tree/master/test/adapters
+	      # Faraday.default_adapter is the default adapter
+	      config.adapter = :httpclient
+
+	      # required
+	      config.api_key = ENV['API_KEY']
+
+	      # default 'UNGUESSABLE'
+	      config.suffix_option = 'SHORT' or 'UNGUESSABLE'
+
+	      # required
+	      config.dynamic_link_domain = 'https://challenge7.page.link'
+
+	      # default 3 seconds
+	      config.timeout = 3 
+
+	      # default 3 seconds
+	      config.open_timeout = 3
+	    end
+
+	    client = ll::Client.new
+	    link = self.website
+	    options = {
+	      # optional, to override default dynamic_link_domain default config
+	      dynamic_link_domain: 'https://challenge7.page.link', 
+
+	      # optional, timeout of each request of this instance
+	      timeout: 10, 
+
+	      # optional, open timeout of each request of this instance
+	      open_timeout: 10
+	    }
+
+	    # options argument is optional
+	    result = client.shorten_link(link, options)
+	    self.short_website = result[:link]
+	    self.save
+	  rescue Exception => e
+	  	Rails.logger.info("exception occur while creating short url #{e}")
+	  end  
+	end	
+
 end

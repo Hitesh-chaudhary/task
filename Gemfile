@@ -59,4 +59,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'google-api-client', '~> 0.34'
 gem 'pg'
+gem 'firebase_dynamic_link'
 
